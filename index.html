@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cadastro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>cadastro</h2>
+
+    <form>
+        <label for="nome">Nome: <input type="text" id="nome"></label>
+        <label for="email">Email: <input type="email" id="email"></label>
+        <label for="senha">Senha: <input type="password" id="senha"></label>
+        <label for="confirmaSenha">Confirmar Senha: <input type="password" id="confirmar-senha"></label>
+        <button type="button" class="btn-cadastrar" onclick="enviar()">Cadastrar</button>
+    </form>
+
+
+    <script>
+        function enviar() {
+            let imputNome = document.getElementById('nome').value
+            let imputEmail = document.getElementById('email').value
+            let imputSenha = document.getElementById('senha').value
+            let imputConfirmaSenha = document.getElementById('confirmar-senha').value
+
+            if (!imputNome || !imputEmail || !imputSenha) {
+                alert('Preencha os campos corretamente')
+                return
+            }
+            if (imputSenha !== imputConfirmaSenha) {
+                alert('As senhas não conferem')
+                return
+            }
+
+            fetch('http://localhost:3000/usuarios',{
+                method: 'POST',
+                headers: {'Content-type': 'application/json'},
+                body: JSON.stringify({
+                    nome: imputNome,
+                    email: imputEmail,
+                    senha: imputSenha
+                })
+            })
+            .then(response => response.json())
+            
+            .then(function (data)  {
+                alert(`Usuário com ID ${data.id} cadastrado`)
+
+                window.location.href  = "usuarios.html";
+            })
+
+        }
+    </script>
+</body>
+</html>

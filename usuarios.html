@@ -1,12 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>usuários</title>
 </head>
 <body>
-    
+    <!-- AGORA VAMOS CRIAR UMA TABELA -->
+    <h2>lista de usuarios</h2>
+    <!-- Essa é a estrutura para criarmos uma tabela -->
+    <table>
+        <!--Vai dizer tudo o que tem ali dentro vai ser um cabeçalho-->
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela">
+            <!-- Gerando tabela dinamica -->
+        </tbody>
+    </table>
+
+    <script>
+        // busca os dados dos usuarios no server
+        function carregarUsuarios(){
+
+            fetch('http://localhost:3000/usuarios')
+            .then(res => res.json())
+            .then(data =>{
+                const tbody = document.getElementById('tabela')
+                //limpar os dados da tabela para não bugar
+                tbody.innerHTML = " "
+                data.forEach(user => {
+                    const tr = document.createElement('tr')
+                    //HTML interno vai receber informaçoes
+                    tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.nome}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <button class="btn-editar" onclick="editar (${user.id})">Editar</button>
+                        <button class="btn-excluir" onclick="excluir (${user.id})">Excluir</button>
+                    </td>
+                    `
+                    //Anexar uma outra linha
+                    tbody.appendChild(tr)
+
+                });
+            })
+        }
+       
+        function excluir(idUsuario) {
+            fetch(`http://localhost:3000/usuarios/${idUsuario}`,
+            {
+            
+                'method' : 'DELETE'
+            })
+          
+            .then(() => carregarUsuarios())
+        }
+        
+        window.onload = carregarUsuarios
+    </script>
+
 </body>
 </html>
